@@ -1,4 +1,5 @@
-﻿@{
+﻿<!-- Index.cshtml -->
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -7,27 +8,49 @@
         <h1>Compare Electronics Prices Across Saudi Arabia</h1>
         <p>Find the best deals on PC parts, laptops, phones, and accessories</p>
         <div class="search-form">
+            <input type="text" placeholder="Enter product name..." class="form-control">
             <select class="form-control">
                 <option value="">Select Category</option>
                 <option value="pcParts">PC Parts</option>
                 <option value="laptops">Laptops</option>
                 <option value="phones">Mobile Phones</option>
+                <option value="accessories">Accessories</option>
             </select>
             <button class="btn btn-primary">Compare Prices</button>
         </div>
     </div>
 </section>
 
-<section class="features">
+<section class="section">
     <div class="container">
-        <h2>Why Choose Us?</h2>
-        <div class="grid grid-cols-3">
-            <div class="feature-card">
-                <img src="/icons/compare.svg" alt="Compare">
-                <h3>Compare Prices</h3>
-                <p>Compare prices from major Saudi retailers instantly</p>
+        <div class="section-title">
+            <h2>Why Choose Us?</h2>
+        </div>
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Compare prices from major Saudi retailers</span>
             </div>
-            <!-- Add other feature cards -->
+            <div class="benefit-item">
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Real-time price updates</span>
+            </div>
+            <div class="benefit-item">
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Price history tracking</span>
+            </div>
+            <div class="benefit-item">
+                <svg class="check-icon" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                </svg>
+                <span>Personalized price alerts</span>
+            </div>
         </div>
     </div>
 </section>
