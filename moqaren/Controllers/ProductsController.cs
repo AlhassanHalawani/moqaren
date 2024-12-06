@@ -16,90 +16,49 @@ namespace moqaren.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryId, string searchTerm)
         {
             try
             {
-                var products = await _context.Products
+                var productsQuery = _context.Products
                     .Include(p => p.Category)
                     .Include(p => p.ProductPrices)
-                        .ThenInclude(pp => pp.Retailer)
-                    .ToListAsync();
+                    .AsQueryable();
 
-                return View(products);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred while retrieving products");
-                return View("Error", new ErrorViewModel
+                if (categoryId.HasValue)
                 {
-                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                    Message = "An error occurred while retrieving products. Please try again later."
-                });
-            }
-        }
-
-        public async Task<IActionResult> Compare(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                var product = await _context.Products
-                    .Include(p => p.Category)
-                    .Include(p => p.ProductPrices)
-                        .ThenInclude(pp => pp.Retailer)
-                    .Include(p => p.PriceHistory)
-                    .FirstOrDefaultAsync(m => m.ProductID == id);
-
-                if (product == null)
-                {
-                    return NotFound();
+                    productsQuery = productsQuery.Where(p => p.CategoryID == categoryId);
                 }
 
-                return View(product);
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    productsQuery = productsQuery.Where(p =>
+                        p.Name.Contains(searchTerm) ||
+                        p.Description.Contains(searchTerm));
+                }
+
+                ViewData["Categories"] = await _context.Categories.ToListAsync();
+                var products = await productsQuery.ToListAsync();
+                return View("productIndex", products);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while retrieving product details");
-                return View("Error", new ErrorViewModel
-                {
-                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                    Message = "An error occurred while retrieving product details. Please try again later."
-                });
+                _logger.LogError(ex, "Error retrieving products");
+                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id });
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SetPriceAlert(int productId, decimal targetPrice)
+        public async Task<IActionResult> Compare(int id)
         {
-            try
-            {
-                // TODO: Get actual user ID after implementing authentication
-                const int temporaryUserId = 1;
+            var product = await _context.Products
+                .Include(p => p.ProductPrices)
+                .ThenInclude(pp => pp.Retailer)
+                .FirstOrDefaultAsync(p => p.ProductID == id);
 
-                var alert = new PriceAlert
-                {
-                    UserID = temporaryUserId,
-                    ProductID = productId,
-                    TargetPrice = targetPrice,
-                    IsActive = true,
-                    CreatedAt = DateTime.Now
-                };
+            if (product == null)
+                return NotFound();
 
-                _context.PriceAlerts.Add(alert);
-                await _context.SaveChangesAsync();
-
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error setting price alert");
-                return Json(new { success = false, message = "Error setting price alert" });
-            }
+            return View(product);
         }
     }
 }

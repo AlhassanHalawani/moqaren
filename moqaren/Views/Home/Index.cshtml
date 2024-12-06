@@ -1,49 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div id="hero" class="section">
-    <h1>Compare Electronics Prices Across Saudi Arabia</h1>
-    <p>Find the best deals on PC parts, laptops, phones, and accessories</p>
-</div>
-
-<div id="search" class="section">
-    <form>
-        <select class="form-control" id="category">
-            <option value="">Select Category</option>
-            <option value="pcParts">PC Parts</option>
-            <option value="laptops">Laptops</option>
-            <option value="phones">Mobile Phones</option>
-            <option value="accessories">Accessories</option>
-        </select>
-        <button type="submit" class="btn btn-primary">Compare Prices</button>
-    </form>
-</div>
-
-<div id="featured" class="section">
-    <h2>Popular Price Comparisons</h2>
-    <div class="table-controls">
-        <select id="sort-prices">
-            <option value="low">Lowest Price First</option>
-            <option value="high">Highest Price First</option>
-        </select>
+<section class="hero">
+    <div class="container">
+        <h1>Compare Electronics Prices Across Saudi Arabia</h1>
+        <p>Find the best deals on PC parts, laptops, phones, and accessories</p>
+        <div class="search-form">
+            <select class="form-control">
+                <option value="">Select Category</option>
+                <option value="pcParts">PC Parts</option>
+                <option value="laptops">Laptops</option>
+                <option value="phones">Mobile Phones</option>
+            </select>
+            <button class="btn btn-primary">Compare Prices</button>
+        </div>
     </div>
-    <!-- Your price comparison table here -->
-</div>
+</section>
 
-<div id="features" class="section">
-    <h2>Why Choose Us?</h2>
-    <ul>
-        <li>Compare prices from major Saudi retailers</li>
-        <li>Real-time price updates</li>
-        <li>Price history tracking</li>
-        <li>Personalized price alerts</li>
-    </ul>
-</div>
-
-<div id="stores" class="section">
-    <h2>Explore Our Partners</h2>
-    <div class="partner-logos">
-        <!-- Add your partner logos here -->
+<section class="features">
+    <div class="container">
+        <h2>Why Choose Us?</h2>
+        <div class="grid grid-cols-3">
+            <div class="feature-card">
+                <img src="/icons/compare.svg" alt="Compare">
+                <h3>Compare Prices</h3>
+                <p>Compare prices from major Saudi retailers instantly</p>
+            </div>
+            <!-- Add other feature cards -->
+        </div>
     </div>
-</div>
+</section>

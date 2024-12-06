@@ -1,0 +1,41 @@
+﻿@model IEnumerable<moqaren.Models.Product>
+@{
+    ViewData["Title"] = "Products";
+    ViewBag.Categories = ViewBag.Categories ?? new List<moqaren.Models.Category>();
+}
+
+<div class="container products-section">
+    <div class="product-grid">
+        <div class="filters">
+            <h2>Filters</h2>
+            <select class="form-control" id="categoryFilter">
+                <option value="">All Categories</option>
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.CategoryID">@category.Name</option>
+                }
+            </select>
+        </div>
+        <div class="products-list">
+            @foreach (var product in Model)
+            {
+                <div class="product-card">
+                    <img src="@(product.ImageURL ?? "/images/placeholder.jpg")" alt="@product.Name" />
+                    <div class="product-info">
+                        <h3>@product.Name</h3>
+                        <p>@product.Description</p>
+                        <div class="price-range">
+                            @if (product.ProductPrices?.Any() == true)
+                            {
+                                var lowest = product.ProductPrices.Min(p => p.Price);
+                                var highest = product.ProductPrices.Max(p => p.Price);
+                                <p>SAR @lowest.ToString("N2") - @highest.ToString("N2")</p>
+                            }
+                        </div>
+                        <a href="@Url.Action("Compare", "Products", new { id = product.ProductID })" class="btn btn-primary">Compare</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
