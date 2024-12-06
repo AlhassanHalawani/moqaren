@@ -1,5 +1,4 @@
-﻿<!-- _Layout.cshtml -->
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -44,5 +43,7 @@
             <p>&copy; 2024 Moqaren. All rights reserved.</p>
         </div>
     </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

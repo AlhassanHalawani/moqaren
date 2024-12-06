@@ -434,3 +434,186 @@ main {
     font-size: 0.875rem;
     margin-top: 0.25rem;
 }
+
+/* Compare page specific styles */
+.compare-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-details-card {
+    margin-bottom: 2.5rem;
+}
+
+.product-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #333;
+}
+
+.product-description {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.product-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.spec-item {
+    display: flex;
+    align-items: center;
+}
+
+.spec-label {
+    font-weight: 500;
+    color: #666;
+    width: 80px;
+}
+
+.spec-value {
+    color: #333;
+}
+
+.price-alert-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+    .price-alert-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+.alert-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+    .alert-form label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .alert-form input {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .alert-form button {
+        padding: 0.75rem 1.5rem;
+        white-space: nowrap;
+    }
+
+/* Current Prices Table */
+.current-prices-card {
+    margin-bottom: 2.5rem;
+}
+
+    .current-prices-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+.prices-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2rem;
+}
+
+    .prices-table th,
+    .prices-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .prices-table th {
+        font-weight: 500;
+        color: #666;
+        background: #f8f9fa;
+    }
+
+    .prices-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .prices-table .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+/* Price History Chart */
+.price-history-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+    .price-history-card h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+.price-history-chart {
+    height: 400px;
+    margin-bottom: 1rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .compare-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .alert-form {
+        flex-direction: column;
+    }
+
+        .alert-form input,
+        .alert-form button {
+            width: 100%;
+        }
+
+    .prices-table {
+        font-size: 0.875rem;
+    }
+
+        .prices-table th,
+        .prices-table td {
+            padding: 0.75rem 0.5rem;
+        }
+
+    .price-history-chart {
+        height: 300px;
+    }
+}

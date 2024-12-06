@@ -1,23 +1,162 @@
 ﻿@model moqaren.Models.Product
 
-<div class="container">
-    <div class="product-comparison">
-        <div class="product-info">
+@{
+    ViewData["Title"] = $"Compare Prices - {Model.Name}";
+}
+
+<div class="compare-container">
+    <div class="product-details-card">
+        @if (!string.IsNullOrEmpty(Model.ImageURL))
+        {
             <img src="@Model.ImageURL" alt="@Model.Name" class="product-image">
-            <h1>@Model.Name</h1>
-            <p>@Model.Description</p>
+        }
+        <h1 class="product-title">@Model.Name</h1>
+        <p class="product-description">@Model.Description</p>
+
+        <div class="product-specs">
+            <div class="spec-item">
+                <span class="spec-label">Brand:</span>
+                <span class="spec-value">@Model.Brand</span>
+            </div>
+            <div class="spec-item">
+                <span class="spec-label">Model:</span>
+                <span class="spec-value">@Model.Model</span>
+            </div>
         </div>
 
-        <div class="price-comparison">
+        <div class="price-alert-section">
+            <h2>Set Price Alert</h2>
+            <div class="alert-form">
+                <label for="targetPrice">Target Price (SAR)</label>
+                <input type="number" id="targetPrice" class="form-control"
+                       step="0.01" min="0" placeholder="Enter target price">
+                <button onclick="setPriceAlert(@Model.ProductID)"
+                        class="btn btn-primary btn-full">
+                    Set Alert
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pricing-details">
+        <div class="current-prices-card">
             <h2>Current Prices</h2>
-            @foreach (var price in Model.ProductPrices)
-            {
-                <div class="retailer-price">
-                    <img src="@price.Retailer.Logo" alt="@price.Retailer.Name">
-                    <span class="price">SAR @price.Price.ToString("N2")</span>
-                    <a href="@price.URL" class="btn btn-primary">Buy Now</a>
-                </div>
-            }
+            <table class="prices-table">
+                <thead>
+                    <tr>
+                        <th>Retailer</th>
+                        <th>Price</th>
+                        <th>Last Updated</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ProductPrices != null && Model.ProductPrices.Any())
+                    {
+                        foreach (var price in Model.ProductPrices.OrderBy(p => p.Price))
+                        {
+                            <tr>
+                                <td>@price.Retailer.Name</td>
+                                <td>SAR @price.Price.ToString("N2")</td>
+                                <td>@price.LastUpdated.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <a href="@price.URL" class="btn btn-primary btn-sm"
+                                       target="_blank">Buy Now</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No prices available</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="price-history-card">
+            <h2>Price History</h2>
+            <div class="price-history-chart">
+                <canvas id="priceHistoryChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Price Alert Function
+        function setPriceAlert(productId) {
+            const targetPrice = document.getElementById('targetPrice').value;
+            if (!targetPrice) {
+                alert('Please enter a target price');
+                return;
+            }
+
+            fetch('/Products/SetPriceAlert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, targetPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Price alert set successfully!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error setting price alert');
+            });
+        }
+
+        // Price History Chart
+        const ctx = document.getElementById('priceHistoryChart').getContext('2d');
+        const priceHistory = @Json.Serialize(Model.PriceHistory != null ?
+        Model.PriceHistory.OrderBy(ph => ph.RecordedAt)
+        .Select(ph => new { date = ph.RecordedAt, price = ph.Price })
+        : new object[] { });
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: priceHistory.map(ph => new Date(ph.date).toLocaleDateString()),
+                datasets: [{
+                    label: 'Price History',
+                    data: priceHistory.map(ph => ph.price),
+                    borderColor: 'rgb(43, 140, 103)',
+                    backgroundColor: 'rgba(43, 140, 103, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+}

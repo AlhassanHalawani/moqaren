@@ -52,7 +52,8 @@ namespace moqaren.Controllers
         {
             var product = await _context.Products
                 .Include(p => p.ProductPrices)
-                .ThenInclude(pp => pp.Retailer)
+                    .ThenInclude(pp => pp.Retailer)
+                .Include(p => p.PriceHistory)
                 .FirstOrDefaultAsync(p => p.ProductID == id);
 
             if (product == null)
