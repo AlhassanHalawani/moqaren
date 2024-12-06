@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Register for Price Alerts";
+}
+
+<div class="form-section">
+    <h1>Register for Price Alerts</h1>
+    <form class="registration-form" method="post">
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number (optional):</label>
+            <input type="tel" id="phone" name="phone" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="city">City:</label>
+            <select id="city" name="city" class="form-control" required>
+                <option value="">Select City</option>
+                <option value="Riyadh">Riyadh</option>
+                <option value="Jeddah">Jeddah</option>
+                <option value="Dammam">Dammam</option>
+                <option value="Makkah">Makkah</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Interests:</label>
+            <div class="checkbox-group">
+                <div class="form-check">
+                    <input type="checkbox" id="pcParts" name="interests" value="pcParts" class="form-check-input">
+                    <label class="form-check-label" for="pcParts">PC Parts</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="laptops" name="interests" value="laptops" class="form-check-input">
+                    <label class="form-check-label" for="laptops">Laptops</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="phones" name="interests" value="phones" class="form-check-input">
+                    <label class="form-check-label" for="phones">Mobile Phones</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="accessories" name="interests" value="accessories" class="form-check-input">
+                    <label class="form-check-label" for="accessories">Accessories</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>

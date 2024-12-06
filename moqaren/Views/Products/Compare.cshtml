@@ -1,0 +1,149 @@
+﻿@model moqaren.Models.Product
+
+@{
+    ViewData["Title"] = $"Compare Prices - {Model.Name}";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Product Details -->
+        <div class="col-md-4">
+            <div class="card">
+                @if (!string.IsNullOrEmpty(Model.ImageURL))
+                {
+                    <img src="@Model.ImageURL" class="card-img-top" alt="@Model.Name">
+                }
+                <div class="card-body">
+                    <h4 class="card-title">@Model.Name</h4>
+                    <p class="card-text">@Model.Description</p>
+                    <div class="specs">
+                        <p><strong>Brand:</strong> @Model.Brand</p>
+                        <p><strong>Model:</strong> @Model.Model</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price Alert Form -->
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Set Price Alert</h5>
+                    <div class="form-group">
+                        <label for="targetPrice">Target Price (SAR)</label>
+                        <input type="number" class="form-control" id="targetPrice"
+                               step="0.01" min="0">
+                    </div>
+                    <button onclick="setPriceAlert(@Model.ProductID)"
+                            class="btn btn-primary mt-2 w-100">
+                        Set Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Price Comparison -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Current Prices</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Retailer</th>
+                                    <th>Price</th>
+                                    <th>Last Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var price in Model.ProductPrices.OrderBy(pp => pp.Price))
+                                {
+                                    <tr>
+                                        <td>@price.Retailer.Name</td>
+                                        <td>SAR @price.Price.ToString("N2")</td>
+                                        <td>@price.LastUpdated.ToString("dd MMM yyyy")</td>
+                                        <td>
+                                            <a href="@price.URL" target="_blank"
+                                               class="btn btn-sm btn-primary">Buy Now</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Price History Chart -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Price History</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="priceHistoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Price Alert Function
+        function setPriceAlert(productId) {
+            const targetPrice = document.getElementById('targetPrice').value;
+            if (!targetPrice) {
+                alert('Please enter a target price');
+                return;
+            }
+
+            fetch('/Products/SetPriceAlert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ productId, targetPrice })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Price alert set successfully!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error setting price alert');
+            });
+        }
+
+        // Price History Chart
+        const ctx = document.getElementById('priceHistoryChart').getContext('2d');
+        const priceHistory = @Json.Serialize(Model.PriceHistory
+        .OrderBy(ph => ph.RecordedAt)
+        .Select(ph => new { date = ph.RecordedAt, price = ph.Price }));
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: priceHistory.map(ph => new Date(ph.date).toLocaleDateString()),
+                datasets: [{
+                    label: 'Price History',
+                    data: priceHistory.map(ph => ph.price),
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    </script>
+}
