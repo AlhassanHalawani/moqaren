@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Add services to the container with JSON cycle handling
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
@@ -13,7 +13,7 @@ builder.Services.AddControllersWithViews()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-// Configure database context
+// Configure database context with SQL Server and retry policy
 builder.Services.AddDbContext<MoqarenContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -26,7 +26,7 @@ builder.Services.AddDbContext<MoqarenContext>(options =>
         }
     ));
 
-// Add CORS policy
+// Configure CORS policy for local development
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowedOrigins",
@@ -38,24 +38,25 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add Session services
+// Configure session with security settings
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.IdleTimeout = TimeSpan.FromMinutes(30);    // Set session timeout to 30 minutes
+    options.Cookie.HttpOnly = true;                    // Prevent client-side access to the cookie
+    options.Cookie.IsEssential = true;                 // Mark as essential for GDPR compliance
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Require HTTPS
 });
 
-// Configure caching
+// Add caching services
 builder.Services.AddResponseCaching();
 builder.Services.AddMemoryCache();
 
-// Configure logging
+// Configure logging providers
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
+// Add environment-specific logging
 if (builder.Environment.IsDevelopment())
 {
     builder.Logging.AddDebug();
@@ -75,17 +76,16 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    app.UseHsts();  // Enable HTTP Strict Transport Security
 }
 
 // Enable CORS
 app.UseCors("AllowedOrigins");
 
-// Use HTTPS Redirection
+// Require HTTPS
 app.UseHttpsRedirection();
 
-// Configure static files with cache control
-// Configure static files with cache control
+// Configure static file caching
 app.UseStaticFiles(new StaticFileOptions
 {
     OnPrepareResponse = ctx =>
@@ -96,27 +96,22 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-// Use routing
+// Configure middleware pipeline
 app.UseRouting();
-
-// Use authentication & authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Use session
-app.UseSession();
-
-// Use response caching
+app.UseSession();  // Single session middleware placement
 app.UseResponseCaching();
 
-// Configure custom middleware for request logging
+// Security headers middleware
 app.Use(async (context, next) =>
 {
-    context.Response.Headers["X-Frame-Options"] = "DENY";
-    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
-    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";
+    // Add security headers
+    context.Response.Headers["X-Frame-Options"] = "DENY";  // Prevent clickjacking
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";  // Prevent MIME type sniffing
+    context.Response.Headers["X-XSS-Protection"] = "1; mode=block";  // Enable XSS filtering
 
-    // Log the request
+    // Request logging
     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
     logger.LogInformation(
         "Request {method} {url} => {statusCode}",
@@ -127,7 +122,11 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// Program.cs - Remove duplicate routes and keep this section only:
+// Configure routes
+
+
+
+
 app.MapControllerRoute(
     name: "category",
     pattern: "category/{categoryName}",
@@ -159,7 +158,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Ensure database is created and migrations are applied
+// Initialize and migrate database
 try
 {
     using (var scope = app.Services.CreateScope())
@@ -174,5 +173,6 @@ catch (Exception ex)
     logger.LogError(ex, "An error occurred while migrating the database.");
 }
 
-
+// Start the application
 app.Run();
+

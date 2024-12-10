@@ -10,6 +10,23 @@ namespace moqaren.Controllers
 {
     public class HomeController : Controller
     {
+        private void SetSecureCookie(string name, string value, int? expirationDays = null)
+        {
+            var options = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            };
+
+            if (expirationDays.HasValue)
+            {
+                options.Expires = DateTime.Now.AddDays(expirationDays.Value);
+            }
+
+            Response.Cookies.Append(name, value, options);
+        }
+
         private readonly ILogger<HomeController> _logger;
         private readonly MoqarenContext _context;
 
@@ -23,15 +40,13 @@ namespace moqaren.Controllers
         {
             try
             {
-                // Get featured products (products with most price alerts)
                 var featuredProducts = await _context.Products
                     .Include(p => p.ProductPrices)
                     .Include(p => p.Category)
-                    .OrderByDescending(p => p.ProductPrices.Count) // Fix: Changed PriceAlerts to ProductPrices
+                    .OrderByDescending(p => p.ProductPrices.Count)
                     .Take(6)
                     .ToListAsync();
 
-                // Get popular categories
                 var popularCategories = await _context.Categories
                     .Include(c => c.Products)
                     .OrderByDescending(c => c.Products.Count)
@@ -64,10 +79,16 @@ namespace moqaren.Controllers
         {
             // Clear any existing session
             HttpContext.Session.Clear();
-            return View();
+            // Clear existing cookies
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -77,10 +98,7 @@ namespace moqaren.Controllers
 
             try
             {
-                // Hash the password for comparison
                 var hashedPassword = HashPassword(model.Password);
-
-                // Find the user
                 var user = await _context.Users
                     .FirstOrDefaultAsync(u => u.Email == model.Email && u.PasswordHash == hashedPassword);
 
@@ -94,11 +112,16 @@ namespace moqaren.Controllers
                 user.LastLogin = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                // Store user info in session
+                // Set Session
                 HttpContext.Session.SetInt32("UserID", user.UserID);
                 HttpContext.Session.SetString("UserName", $"{user.FirstName} {user.LastName}");
 
-                // Redirect to home page
+                // Set Cookies
+                string userInfo = $"{user.FirstName} {user.LastName}";
+                SetSecureCookie("UserName", userInfo, model.RememberMe ? 30 : null);
+                SetSecureCookie("LastLogin", DateTime.Now.ToString("o"));
+                SetSecureCookie("UserEmail", user.Email);
+
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -116,6 +139,7 @@ namespace moqaren.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -125,14 +149,12 @@ namespace moqaren.Controllers
 
             try
             {
-                // Check if email already exists
                 if (await _context.Users.AnyAsync(u => u.Email == model.Email))
                 {
                     ModelState.AddModelError("Email", "This email is already registered");
                     return View(model);
                 }
 
-                // Create new user
                 var user = new User
                 {
                     FirstName = model.FirstName,
@@ -146,7 +168,6 @@ namespace moqaren.Controllers
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                // Automatically log in the user
                 HttpContext.Session.SetInt32("UserID", user.UserID);
                 HttpContext.Session.SetString("UserName", $"{user.FirstName} {user.LastName}");
 
@@ -162,8 +183,11 @@ namespace moqaren.Controllers
 
         public IActionResult Logout()
         {
-            // Clear the session
             HttpContext.Session.Clear();
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -181,7 +205,6 @@ namespace moqaren.Controllers
             });
         }
 
-        // Helper method to hash passwords
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())
