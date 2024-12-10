@@ -1,5 +1,4 @@
-﻿<!-- Views/Admin/Index.cshtml -->
-@{
+﻿@{
     ViewData["Title"] = "Admin Dashboard";
 }
 
@@ -7,7 +6,7 @@
     <h1>Admin Dashboard</h1>
 
     <div class="admin-links">
+        <a href="@Url.Action("ProductMGMT", "Admin")" class="btn btn-primary">Manage Products</a>
         <a href="@Url.Action("Debug", "Admin")" class="btn btn-primary">View Debug Info</a>
-        <!-- Add Product link will be added later -->
     </div>
 </div>
