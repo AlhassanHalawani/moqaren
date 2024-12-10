@@ -22,6 +22,92 @@
     </div>
 </section>
 
+
+
+<!-- Featured Comparisons Section -->
+<section id="featured" class="section">
+    <div class="container">
+        <h2>Popular Price Comparisons</h2>
+        <div class="table-controls">
+            <select id="sort-prices" class="control-select form-control">
+                <option value="">Sort by...</option>
+                <option value="low">Lowest Price First</option>
+                <option value="high">Highest Price First</option>
+            </select>
+        </div>
+
+        <div class="table-responsive">
+            <table class="price-comparison">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Jarir</th>
+                        <th>Extra</th>
+                        <th>Noon</th>
+                        <th>Amazon.sa</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="product-row" data-product-id="iphone14pro">
+                        <td class="product-name">
+                            iPhone 14 Pro (128GB)
+                        </td>
+                        <td data-store="jarir" class="price">4,299 SAR</td>
+                        <td data-store="extra" class="price">4,199 SAR</td>
+                        <td data-store="noon" class="price">4,299 SAR</td>
+                        <td data-store="amazon" class="price">4,149 SAR</td>
+                        <td>
+                            <button class="track-price btn btn-outline" data-product-id="iphone14pro">
+                                Track Price
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="product-row" data-product-id="galaxys23">
+                        <td class="product-name">
+                            Samsung Galaxy S23 (256GB)
+                        </td>
+                        <td data-store="jarir" class="price">3,499 SAR</td>
+                        <td data-store="extra" class="price">3,495 SAR</td>
+                        <td data-store="noon" class="price">3,449 SAR</td>
+                        <td data-store="amazon" class="price">3,499 SAR</td>
+                        <td>
+                            <button class="track-price btn btn-outline" data-product-id="galaxys23">
+                                Track Price
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="totals-row">
+                        <td>Total</td>
+                        <td id="jarir-total">7,798 SAR</td>
+                        <td id="extra-total">7,694 SAR</td>
+                        <td id="noon-total">7,748 SAR</td>
+                        <td id="amazon-total">7,648 SAR</td>
+                        <td></td>
+                    </tr>
+                    <tr class="savings-row">
+                        <td>Potential Savings</td>
+                        <td colspan="5" id="savings-amount">Save up to 150 SAR by shopping at the best prices</td>
+                    </tr>
+                    <tr class="best-option-row">
+                        <td>Best option</td>
+                        <td colspan="4" id="best-option">Amazon.sa offers the best total price</td>
+                        <td>
+                            <button id="refresh-all" class="btn btn-primary">
+                                Refresh All Prices
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="price-alerts" class="alerts-container"></div>
+    </div>
+</section>
+
+
+
+
 <section class="section">
     <div class="container">
         <div class="section-title">

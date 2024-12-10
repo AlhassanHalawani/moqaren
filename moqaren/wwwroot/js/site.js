@@ -172,3 +172,53 @@ function clearErrors() {
     const errorMessages = document.querySelectorAll(".error-message");
     errorMessages.forEach(error => error.remove());
 }
+
+// Price comparison functionality
+document.addEventListener('DOMContentLoaded', function () {
+    // Sort functionality
+    const sortSelect = document.getElementById('sort-prices');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+            const rows = Array.from(document.querySelectorAll('.product-row'));
+            const tbody = document.querySelector('.price-comparison tbody');
+
+            rows.sort((a, b) => {
+                const pricesA = Array.from(a.querySelectorAll('.price'))
+                    .map(td => parseFloat(td.textContent.replace(/[^0-9.]/g, '')));
+                const pricesB = Array.from(b.querySelectorAll('.price'))
+                    .map(td => parseFloat(td.textContent.replace(/[^0-9.]/g, '')));
+
+                const minA = Math.min(...pricesA);
+                const minB = Math.min(...pricesB);
+
+                return this.value === 'low' ? minA - minB : minB - minA;
+            });
+
+            // Remove current rows
+            rows.forEach(row => row.remove());
+
+            // Add sorted rows back
+            rows.forEach(row => tbody.insertBefore(row, tbody.querySelector('.totals-row')));
+        });
+    }
+
+    // Track price button functionality
+    document.querySelectorAll('.track-price').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.productId;
+            // Add your price tracking logic here
+            alert('Price tracking will be implemented soon!');
+        });
+    });
+
+    // Refresh prices functionality
+    const refreshButton = document.getElementById('refresh-all');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', function () {
+            document.querySelectorAll('.price').forEach(priceCell => {
+                priceCell.classList.add('price-updated');
+                // Add your price refresh logic here
+            });
+        });
+    }
+});

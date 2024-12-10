@@ -57,9 +57,13 @@
         @RenderBody()
     </main>
 
+    
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Moqaren. All rights reserved.</p>
+            <div class="footer-content">
+                <p>&copy; 2024 Moqaren. All rights reserved.</p>
+                <a href="@Url.Action("Index", "Admin")" class="admin-link">Admin</a>
+            </div>
         </div>
     </footer>
 
