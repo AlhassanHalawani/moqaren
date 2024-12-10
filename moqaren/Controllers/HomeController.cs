@@ -205,6 +205,41 @@ namespace moqaren.Controllers
             });
         }
 
+
+
+        // guest in Controllers/HomeController.cs
+        [HttpPost]
+        public IActionResult SetGuestSession()
+        {
+            try
+            {
+                // Generate a unique guest ID
+                string guestId = Guid.NewGuid().ToString();
+
+                // Set session values for guest
+                HttpContext.Session.SetString("UserID", "guest");
+                HttpContext.Session.SetString("UserName", "Guest");
+
+                // Set secure cookie for guest with absolute expiration
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddDays(1),
+                    Path = "/"
+                };
+                Response.Cookies.Append("userType", "guest", cookieOptions);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error setting guest session");
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
         private string HashPassword(string password)
         {
             using (var sha256 = SHA256.Create())

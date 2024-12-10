@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    @{
+        var token = Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+    <input type="hidden" name="__RequestVerificationToken" value="@token" />
+
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-content">
+            <h2>Welcome to Moqaren</h2>
+            <p>Please choose how you'd like to continue:</p>
+            <div class="modal-buttons">
+                <button onclick="window.location.href='/login'" class="btn btn-primary">Login</button>
+                <button onclick="continueAsGuest()" class="btn btn-outline">Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+
     <header class="navbar">
         <nav class="container">
             <div class="nav-brand">
@@ -47,6 +63,8 @@
         </div>
     </footer>
 
+    @* Group all scripts together at the bottom *@
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

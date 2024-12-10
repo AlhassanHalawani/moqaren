@@ -677,3 +677,64 @@ main {
     gap: 1rem;
     margin-top: 1rem;
 }
+
+/* popup */
+.login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+    .login-modal.show {
+        display: flex;
+    }
+
+.login-modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+    .login-modal-content h2 {
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+
+    .login-modal-content p {
+        margin-bottom: 1.5rem;
+        color: #666;
+    }
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+    .modal-buttons .btn {
+        min-width: 120px;
+    }
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
