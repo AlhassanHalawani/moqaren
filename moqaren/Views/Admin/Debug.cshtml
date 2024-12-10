@@ -1,0 +1,35 @@
+﻿<!-- Views/Admin/Debug.cshtml -->
+@{
+    ViewData["Title"] = "Debug Information";
+}
+
+<div class="container">
+    <h1>Account Information</h1>
+
+    <div class="debug-section">
+        <h2>Cookie Values</h2>
+        <ul>
+            @foreach (var cookie in Context.Request.Cookies)
+            {
+                <li>@cookie.Key : @cookie.Value</li>
+            }
+        </ul>
+    </div>
+
+    <div class="debug-section">
+        <h2>Session Values</h2>
+        <ul>
+            @foreach (var key in Context.Session.Keys)
+            {
+                <li>@key : @Context.Session.GetString(key)</li>
+            }
+        </ul>
+    </div>
+
+    <div class="debug-section">
+        <h2>Browser Information</h2>
+        <p>User Agent: @Context.Request.Headers["User-Agent"]</p>
+    </div>
+
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-primary">Back to Admin</a>
+</div>

@@ -642,3 +642,38 @@ main {
         height: 300px;
     }
 }
+
+/* Add to wwwroot/css/site.css */
+.debug-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+}
+
+    .debug-section h2 {
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .debug-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .debug-section li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+        word-break: break-all;
+    }
+
+        .debug-section li:last-child {
+            border-bottom: none;
+        }
+
+.admin-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
