@@ -988,3 +988,203 @@ main {
 .price-updated {
     animation: priceUpdate 1s ease-out;
 }
+
+/* Modal/Popup Styles */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    border-bottom: none;
+    padding: 1.5rem;
+    background-color: var(--primary-color);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+    .modal-header h5 {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 1.5rem;
+}
+
+/* Delete Confirmation Modal Specific Styles */
+.delete-confirmation-modal .modal-header {
+    background-color: #dc3545; /* Red for delete actions */
+}
+
+.delete-confirmation-modal .modal-body {
+    text-align: center;
+    padding: 2rem;
+}
+
+    .delete-confirmation-modal .modal-body i {
+        font-size: 3rem;
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+
+/* Success/Error Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 1060;
+    min-width: 300px;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease-out;
+}
+
+    .notification.success {
+        background-color: #28a745;
+    }
+
+    .notification.error {
+        background-color: #dc3545;
+    }
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.notification-icon {
+    font-size: 1.25rem;
+}
+
+.notification-message {
+    margin: 0;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.25rem;
+    transition: opacity 0.2s;
+}
+
+    .notification-close:hover {
+        opacity: 1;
+    }
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.product-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.no-image-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #f8f9fa;
+    border: 1px dashed #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #6c757d;
+    border-radius: 4px;
+}
+
+.img-preview {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn-group {
+    white-space: nowrap;
+}
+
+.modal-header .btn-close {
+    margin: -0.5rem -0.5rem -0.5rem auto;
+}
+
+.was-validated .form-control:valid:focus,
+.was-validated .form-control:invalid:focus {
+    box-shadow: none;
+}
+
+#productSearch {
+    min-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+        .btn-group .btn {
+            width: 100%;
+        }
+
+    #productSearch {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
